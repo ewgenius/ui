@@ -1,4 +1,4 @@
-# shadcn/ui radix colors theme generator
+## shadcn/ui radix colors theme generator
 
 Generate custom CSS themes for shadcn/ui effortlessly using vibrant palettes from Radix Colors.
 
