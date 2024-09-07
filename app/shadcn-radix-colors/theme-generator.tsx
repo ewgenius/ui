@@ -116,19 +116,19 @@ export function ThemeGenerator() {
         </div>
 
         <div className="text-sm">
-          Generate custom CSS themes for{" "}
+          Generate custom themes for{" "}
           <a href="https://ui.shadcn.com" className="underline" target="_blank">
             shadcn/ui
           </a>{" "}
-          components effortlessly using vibrant palettes from{" "}
+          using vibrant palettes from{" "}
           <a
             href="https://www.radix-ui.com/colors"
             className="underline"
             target="_blank"
           >
             Radix Colors
-          </a>
-          .
+          </a>{" "}
+          with ease.
         </div>
 
         <hr className="border-t" />
@@ -240,6 +240,20 @@ export function ThemeGenerator() {
             <ThemeCodePreview lightTheme={lightTheme} darkTheme={darkTheme} />
           </DialogContent>
         </Dialog>
+
+        <hr className="border-t" />
+
+        <div className="text-xs text-muted-foreground">
+          Built by{" "}
+          <a
+            href="https://github.com/ewgenius"
+            target="_blank"
+            className="underline"
+          >
+            @ewgenius
+          </a>
+          .
+        </div>
       </div>
 
       <div className="md:h-screen p-8 flex flex-col gap-4 bg-base-2">
