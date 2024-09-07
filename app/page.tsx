@@ -1,6 +1,13 @@
 "use client";
 
-import { useMemo, useState, type CSSProperties, type FC } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  type CSSProperties,
+  type FC,
+} from "react";
 import { Dashboard } from "@/components/preview";
 import {
   Select,
@@ -23,12 +30,25 @@ import {
   type ColorShade,
 } from "@/lib/colors";
 import { Icons } from "@/components/icons";
-import { CircleHelp, CirclePlus, Moon, Sun } from "lucide-react";
+import { CircleHelp, CirclePlus, Copy, Moon, Sun, Check } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { ToggleGroupItem } from "@radix-ui/react-toggle-group";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Home() {
   const { setTheme } = useTheme();
@@ -174,20 +194,23 @@ export default function Home() {
           />
         </div>
 
-        <pre className="min-h-96 text-xs font-mono border p-2 rounded-md overflow-auto bg-secondary">
-          {`@layer base {
-  :root {
-${Object.entries(lightTheme)
-  .map(([key, value]) => `    ${key}: ${value};`)
-  .join("\n")}
-  }
-  .dark {
-${Object.entries(darkTheme)
-  .map(([key, value]) => `    ${key}: ${value};`)
-  .join("\n")}
-  }
-}`}
-        </pre>
+        <div className="grow" />
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Install</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-2xl outline-none">
+            <DialogHeader>
+              <DialogTitle>Theme</DialogTitle>
+              <DialogDescription>
+                Copy and paste the following code into your CSS file.
+              </DialogDescription>
+            </DialogHeader>
+
+            <ThemeCodePreview lightTheme={lightTheme} darkTheme={darkTheme} />
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="md:h-screen p-8 flex flex-col bg-base-3">
@@ -282,16 +305,91 @@ const ColorToggle: FC<ColorToggleProps> = ({ value, colors, onChange }) => {
           value={color.key}
           className="p-0.5 rounded-full data-[state=on]:ring-2 ring-offset-0 ring-accent"
         >
-          <div
-            className="size-4 rounded-full"
-            style={{
-              backgroundColor: color.paletteDark[`${color.key}10`],
-              borderWidth: 1,
-              borderColor: color.paletteDark[`${color.key}6`],
-            }}
-          />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className="size-4 rounded-full"
+                style={{
+                  backgroundColor: color.paletteDark[`${color.key}10`],
+                  borderWidth: 1,
+                  borderColor: color.paletteDark[`${color.key}6`],
+                }}
+              />
+            </TooltipTrigger>
+            <TooltipContent>{color.label || color.key}</TooltipContent>
+          </Tooltip>
         </ToggleGroupItem>
       ))}
     </ToggleGroup>
   );
 };
+
+const ThemeCodePreview: FC<{ lightTheme: any; darkTheme: any }> = ({
+  lightTheme,
+  darkTheme,
+}) => {
+  const { copied, copy } = useCopy();
+
+  const code = `@layer base {
+  :root {
+${Object.entries(lightTheme)
+  .map(([key, value]) => `    ${key}: ${value};`)
+  .join("\n")}
+}
+  .dark {
+${Object.entries(darkTheme)
+  .map(([key, value]) => `    ${key}: ${value};`)
+  .join("\n")}
+  }
+}`;
+
+  return (
+    <div className="relative w-full flex flex-col overflow-hidden">
+      <pre className="h-96 w-full text-sm font-mono border p-2 rounded-md overflow-auto bg-base-3">
+        {code}
+      </pre>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-2 right-2"
+        onClick={() => copy(code)}
+      >
+        {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+      </Button>
+    </div>
+  );
+};
+
+export function useTimeout() {
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  const clear = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const set = (callback: (args: void) => void, ms?: number) => {
+    clear();
+    timeoutRef.current = setTimeout(callback, ms);
+  };
+
+  return {
+    set,
+    clear,
+  };
+}
+
+export function useCopy() {
+  const [copied, setCopied] = useState(false);
+  const { set } = useTimeout();
+
+  const copy = (value: string) => {
+    if (navigator && navigator.clipboard) {
+      navigator.clipboard.writeText(value);
+      setCopied(true);
+      set(() => setCopied(false), 2500);
+    }
+  };
+
+  return { copy, copied };
+}
