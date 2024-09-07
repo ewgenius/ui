@@ -44,7 +44,6 @@ import {
 } from "@/components/ui/dialog";
 import { Charts } from "@/components/preview/charts";
 import { Dashboard } from "@/components/preview/dashboard";
-import { Components } from "@/components/preview/components";
 
 export default function Home() {
   const { setTheme } = useTheme();
