@@ -1,14 +1,7 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-  type CSSProperties,
-  type FC,
-} from "react";
-import { Dashboard } from "@/components/preview";
+import { useMemo, useState, useRef, type CSSProperties, type FC } from "react";
+import { useQueryState } from "nuqs";
 import {
   Select,
   SelectContent,
@@ -31,7 +24,7 @@ import {
 } from "@/lib/colors";
 import { Icons } from "@/components/icons";
 import { CircleHelp, CirclePlus, Copy, Moon, Sun, Check } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { ToggleGroupItem } from "@radix-ui/react-toggle-group";
 import { Button } from "@/components/ui/button";
@@ -49,32 +42,45 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Charts } from "@/components/preview/charts";
+import { Dashboard } from "@/components/preview/dashboard";
+import { Components } from "@/components/preview/components";
 
 export default function Home() {
   const { setTheme } = useTheme();
-  const [darkMode, setDarkMode] = useState(false);
-  const [baseColor, setBaseColor] = useState("gray");
-  const [accentColor, setAccentColor] = useState("blue");
-  const [primaryColor, setPrimaryColor] = useState("black");
-  const [destructiveColor, setDestructiveColor] = useState("red");
+  const [mode, setMode] = useQueryState("mode", {
+    defaultValue: "light",
+  });
+  const [baseColor, setBaseColor] = useQueryState("base", {
+    defaultValue: "gray",
+  });
+  const [accentColor, setAccentColor] = useQueryState("accent", {
+    defaultValue: "blue",
+  });
+  const [primaryColor, setPrimaryColor] = useQueryState("primary", {
+    defaultValue: "black",
+  });
+  const [destructiveColor, setDestructiveColor] = useQueryState("destructive", {
+    defaultValue: "red",
+  });
 
   const onDarkModeChange = (value: string) => {
     setTheme(value);
-    setDarkMode(value === "dark");
+    setMode(value === "dark" ? "dark" : "light");
   };
 
   const { lightTheme, darkTheme } = useMemo(() => {
     const lightTheme = getShadcnTheme(
       colorsMap[baseColor],
-      colorsMap[primaryColor],
       colorsMap[accentColor],
+      colorsMap[primaryColor],
       colorsMap[destructiveColor],
       false
     );
     const darkTheme = getShadcnTheme(
       colorsMap[baseColor],
-      colorsMap[primaryColor],
       colorsMap[accentColor],
+      colorsMap[primaryColor],
       colorsMap[destructiveColor],
       true
     );
@@ -90,11 +96,11 @@ export default function Home() {
       className="bg-background text-foreground flex flex-col md:flex-row md:h-screen overflow-hidden divide-x"
       style={
         {
-          ...(darkMode ? darkTheme : lightTheme),
+          ...(mode === "dark" ? darkTheme : lightTheme),
         } as CSSProperties
       }
     >
-      <div className="md:w-96 shrink-0 flex flex-col h-full gap-4 p-4 overflow-x-hidden overflow-y-auto">
+      <div className="md:w-[320px] shrink-0 flex flex-col h-full gap-4 p-4 overflow-x-hidden overflow-y-auto">
         <div className="flex items-center gap-2">
           <Icons.logo className="h-6 text-foreground" />
           <CirclePlus className="h-4 text-foreground/60" />
@@ -106,12 +112,19 @@ export default function Home() {
           </Button>
         </div>
 
+        <div className="text-sm">
+          Generate custom CSS themes for Shadcn-UI effortlessly using vibrant
+          palettes from Radix Colors.
+        </div>
+
+        <hr className="border-t" />
+
         <div className="flex flex-col gap-1">
-          <label className="text-sm">Appearance</label>
+          <label className="text-sm text-muted-foreground">Appearance</label>
           <Tabs
             defaultValue="account"
             className="w-full"
-            value={darkMode ? "dark" : "light"}
+            value={mode === "dark" ? "dark" : "light"}
             onValueChange={onDarkModeChange}
           >
             <TabsList className="grid w-full grid-cols-2">
@@ -128,7 +141,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm">Base Color</label>
+          <label className="text-sm text-muted-foreground">Base Color</label>
 
           <ColorToggle
             value={baseColor}
@@ -145,7 +158,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm">Accent Color</label>
+          <label className="text-sm text-muted-foreground">Accent Color</label>
 
           {recommendedAccentColors[baseColor] ? (
             <ColorToggle
@@ -166,7 +179,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm">Primary Color</label>
+          <label className="text-sm text-muted-foreground">Primary Color</label>
           <ColorSelect
             value={primaryColor}
             onChange={setPrimaryColor}
@@ -176,7 +189,9 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm">Destructive Color</label>
+          <label className="text-sm text-muted-foreground">
+            Destructive Color
+          </label>
 
           <ColorToggle
             value={destructiveColor}
@@ -213,12 +228,25 @@ export default function Home() {
         </Dialog>
       </div>
 
-      <div className="md:h-screen p-8 flex flex-col bg-base-3">
-        <div className="overflow-hidden rounded-lg border grow">
-          <div className="relative shadow size-full overflow-auto flex flex-col bg-background text-foreground">
-            <Dashboard />
+      <div className="md:h-screen p-8 flex flex-col gap-4 bg-base-2">
+        <h2 className="text-xl font-semibold">Theme preview</h2>
+        <Tabs defaultValue="dashboard">
+          <TabsList>
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="charts">Charts</TabsTrigger>
+          </TabsList>
+
+          <div className="overflow-hidden rounded-lg border grow mt-2">
+            <div className="relative shadow size-full overflow-auto flex flex-col bg-background text-foreground">
+              <TabsContent value="dashboard">
+                <Dashboard />
+              </TabsContent>
+              <TabsContent value="charts">
+                <Charts />
+              </TabsContent>
+            </div>
           </div>
-        </div>
+        </Tabs>
       </div>
     </div>
   );

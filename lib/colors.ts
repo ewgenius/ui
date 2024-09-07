@@ -126,7 +126,7 @@ export const colorsMap: Record<string, ColorShade> = {
       black3: "#000000",
       black4: "#000000",
       black5: "#000000",
-      black6: "#000000",
+      black6: "#FFFFFF",
       black7: "#000000",
       black8: "#000000",
       black9: "#FFFFFF",
