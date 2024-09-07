@@ -351,10 +351,10 @@ const ColorToggle: FC<ColorToggleProps> = ({ value, colors, onChange }) => {
   );
 };
 
-const ThemeCodePreview: FC<{ lightTheme: any; darkTheme: any }> = ({
-  lightTheme,
-  darkTheme,
-}) => {
+const ThemeCodePreview: FC<{
+  lightTheme: Record<string, string>;
+  darkTheme: Record<string, string>;
+}> = ({ lightTheme, darkTheme }) => {
   const { copied, copy } = useCopy();
 
   const code = `@layer base {

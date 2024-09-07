@@ -174,7 +174,7 @@ export function getShadcnTheme(
   primary: ColorShade,
   destructive: ColorShade,
   darkMode: boolean
-) {
+): Record<string, string> {
   const basePalette = darkMode ? base.paletteDark : base.paletteLight;
   const accentPalette = darkMode ? accent.paletteDark : accent.paletteLight;
   const primaryPalette = darkMode ? primary.paletteDark : primary.paletteLight;
