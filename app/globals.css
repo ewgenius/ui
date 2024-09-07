@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
   :root {
     --base-1: 0 0% 98.82352941176471%;
@@ -47,8 +46,8 @@
     --border: 0 0% 85.09803921568627%;
     --input: 0 0% 85.09803921568627%;
     --ring: 0 0% 85.09803921568627%;
-    --radius: 0.5rem;
-}
+    --radius: 0.5rem
+  }
   .dark {
     --base-1: 0 0% 6.666666666666667%;
     --base-2: 0 0% 9.803921568627452%;
@@ -93,10 +92,9 @@
     --border: 0 0% 22.745098039215687%;
     --input: 0 0% 22.745098039215687%;
     --ring: 0 0% 22.745098039215687%;
-    --radius: 0.5rem;
+    --radius: 0.5rem
   }
 }
-
 @layer base {
   * {
     @apply border-border;
@@ -105,3 +103,4 @@
     @apply bg-background text-foreground;
   }
 }
+

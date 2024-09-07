@@ -150,17 +150,22 @@ export function getHSLValue(hex: string): string {
   return d3.color(hex)!.formatHsl().slice(4, -1).replaceAll(",", "");
 }
 
+function cssVariableName(name: string, prefixed = true): string {
+  return `${prefixed ? "--" : ""}${name}`;
+}
+
 export function expandColorSwatch(
   name: string,
   color: ColorShade,
-  darkMode = false
+  darkMode = false,
+  prefixed = true
 ): Record<string, string> {
   return Array.from({ length: 12 }, (_, i) => i + 1).reduce<
     Record<string, string>
   >(
     (acc, i) => ({
       ...acc,
-      [`--${name}-${i}`]: getHSLValue(
+      [cssVariableName(`${name}-${i}`, prefixed)]: getHSLValue(
         (darkMode ? color.paletteDark : color.paletteLight)[`${color.key}${i}`]
       ),
     }),
@@ -173,7 +178,8 @@ export function getShadcnTheme(
   accent: ColorShade,
   primary: ColorShade,
   destructive: ColorShade,
-  darkMode: boolean
+  darkMode: boolean,
+  prefixed = true
 ): Record<string, string> {
   const basePalette = darkMode ? base.paletteDark : base.paletteLight;
   const accentPalette = darkMode ? accent.paletteDark : accent.paletteLight;
@@ -183,39 +189,65 @@ export function getShadcnTheme(
     : destructive.paletteLight;
 
   const theme = {
-    ...expandColorSwatch("base", base, darkMode),
+    ...expandColorSwatch("base", base, darkMode, prefixed),
 
-    ...expandColorSwatch("accent", accent, darkMode),
+    ...expandColorSwatch("accent", accent, darkMode, prefixed),
 
-    "--background": getHSLValue(basePalette[`${base.key}1`]),
-    "--foreground": getHSLValue(basePalette[`${base.key}12`]),
+    [cssVariableName("background", true)]: getHSLValue(
+      basePalette[`${base.key}1`]
+    ),
+    [cssVariableName("foreground", true)]: getHSLValue(
+      basePalette[`${base.key}12`]
+    ),
 
-    "--card": getHSLValue(basePalette[`${base.key}2`]),
-    "--card-foreground": getHSLValue(basePalette[`${base.key}12`]),
+    [cssVariableName("card", true)]: getHSLValue(basePalette[`${base.key}2`]),
+    [cssVariableName("card-foreground", true)]: getHSLValue(
+      basePalette[`${base.key}12`]
+    ),
 
-    "--popover": getHSLValue(basePalette[`${base.key}1`]),
-    "--popover-foreground": getHSLValue(basePalette[`${base.key}12`]),
+    [cssVariableName("popover", true)]: getHSLValue(
+      basePalette[`${base.key}1`]
+    ),
+    [cssVariableName("popover-foreground", true)]: getHSLValue(
+      basePalette[`${base.key}12`]
+    ),
 
-    "--primary": getHSLValue(primaryPalette[`${primary.key}10`]),
-    "--primary-foreground": getHSLValue(primaryPalette[`${primary.key}13`]),
+    [cssVariableName("primary", true)]: getHSLValue(
+      primaryPalette[`${primary.key}10`]
+    ),
+    [cssVariableName("primary-foreground", true)]: getHSLValue(
+      primaryPalette[`${primary.key}13`]
+    ),
 
-    "--secondary": getHSLValue(basePalette[`${base.key}2`]),
-    "--secondary-foreground": getHSLValue(basePalette[`${base.key}11`]),
+    [cssVariableName("secondary", true)]: getHSLValue(
+      basePalette[`${base.key}2`]
+    ),
+    [cssVariableName("secondary-foreground", true)]: getHSLValue(
+      basePalette[`${base.key}11`]
+    ),
 
-    "--muted": getHSLValue(basePalette[`${base.key}2`]),
-    "--muted-foreground": getHSLValue(basePalette[`${base.key}11`]),
+    [cssVariableName("muted", true)]: getHSLValue(basePalette[`${base.key}2`]),
+    [cssVariableName("muted-foreground", true)]: getHSLValue(
+      basePalette[`${base.key}11`]
+    ),
 
-    "--accent": getHSLValue(accentPalette[`${accent.key}10`]),
-    "--accent-foreground": getHSLValue(accentPalette[`${accent.key}13`]),
+    [cssVariableName("accent", true)]: getHSLValue(
+      accentPalette[`${accent.key}10`]
+    ),
+    [cssVariableName("accent-foreground", true)]: getHSLValue(
+      accentPalette[`${accent.key}13`]
+    ),
 
-    "--destructive": getHSLValue(destructivePalette[`${destructive.key}10`]),
-    "--destructive-foreground": getHSLValue(
+    [cssVariableName("destructive", true)]: getHSLValue(
+      destructivePalette[`${destructive.key}10`]
+    ),
+    [cssVariableName("destructive-foreground", true)]: getHSLValue(
       destructivePalette[`${destructive.key}12`]
     ),
 
-    "--border": getHSLValue(basePalette[`${base.key}6`]),
-    "--input": getHSLValue(basePalette[`${base.key}6`]),
-    "--ring": getHSLValue(basePalette[`${base.key}6`]),
+    [cssVariableName("border", true)]: getHSLValue(basePalette[`${base.key}6`]),
+    [cssVariableName("input", true)]: getHSLValue(basePalette[`${base.key}6`]),
+    [cssVariableName("ring", true)]: getHSLValue(basePalette[`${base.key}6`]),
 
     "--radius": "0.5rem",
   };
