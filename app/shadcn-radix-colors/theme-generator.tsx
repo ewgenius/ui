@@ -232,12 +232,17 @@ export function ThemeGenerator() {
           <DialogContent className="sm:max-w-2xl outline-none">
             <DialogHeader>
               <DialogTitle>Theme</DialogTitle>
-              <DialogDescription>
-                Copy and paste the following code into your CSS file.
-              </DialogDescription>
+              <DialogDescription>Use generated theme</DialogDescription>
             </DialogHeader>
-
+            Copy and paste the following code into your CSS file.
             <ThemeCodePreview lightTheme={lightTheme} darkTheme={darkTheme} />
+            Or install directly using shadcn cli:
+            <ThemeInstallSnippet
+              base={baseColor}
+              accent={accentColor}
+              primary={primaryColor}
+              destructive={destructiveColor}
+            />
           </DialogContent>
         </Dialog>
 
@@ -400,14 +405,46 @@ ${Object.entries(darkTheme)
 }`;
 
   return (
-    <div className="relative w-full flex flex-col overflow-hidden">
-      <pre className="h-96 w-full text-sm font-mono border p-2 rounded-md overflow-auto bg-base-3">
+    <div className="relative w-full flex flex-col border rounded-md overflow-hidden group">
+      <pre className="h-48 w-full text-sm font-mono p-2 overflow-auto bg-base-3">
         {code}
       </pre>
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-2 right-2"
+        className="absolute top-1 right-1 opacity-50 group-hover:opacity-100"
+        onClick={() => copy(code)}
+      >
+        {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+      </Button>
+    </div>
+  );
+};
+
+interface ThemeInstallSnippetProps {
+  base: string;
+  accent: string;
+  primary: string;
+  destructive: string;
+}
+
+const ThemeInstallSnippet: FC<ThemeInstallSnippetProps> = ({
+  base,
+  accent,
+  primary,
+  destructive,
+}) => {
+  const { copied, copy } = useCopy();
+
+  const code = `npx shadcn add https://ui.ewgenius.me/themes/radix/${base}-${accent}-${primary}-${destructive}`;
+
+  return (
+    <div className="relative w-full flex items-center overflow-hidden border bg-base-3 rounded-md group h-12">
+      <pre className="w-full text-sm font-mono p-2 overflow-auto">{code}</pre>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-1 right-1 opacity-50 group-hover:opacity-100"
         onClick={() => copy(code)}
       >
         {copied ? <Check className="size-4" /> : <Copy className="size-4" />}

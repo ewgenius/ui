@@ -6,28 +6,30 @@ import {
 } from "@/lib/colors";
 import { NextResponse } from "next/server";
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const params = [];
 
   for (const base of grayscaleColors) {
     for (const accent of accentColors) {
       params.push({
-        base: base,
-        accent: accent,
+        name: `${base}-${accent.key}`,
       });
     }
   }
 
-  console.log(params);
-
   return params;
 }
 
-export const GET = async (
-  _: Request,
-  params: { params: { base: string; accent: string } }
-) => {
-  const { base, accent } = params.params;
+export const GET = async (_: Request, params: { params: { name: string } }) => {
+  const { name } = params.params;
+
+  const [base, accent, primary, destructive] = name.split("-");
+
+  if (!base || !accent) {
+    return NextResponse.json({ error: "Invalid theme name" }, { status: 400 });
+  }
 
   const baseColor = colorsMap[base];
   const accentColor = colorsMap[accent];
@@ -39,14 +41,21 @@ export const GET = async (
     );
   }
 
-  const primary = colorsMap["black"];
-  const destructive = colorsMap["red"];
+  const primaryColor = colorsMap[primary || "black"];
+  const destructiveColor = colorsMap[destructive || "red"];
+
+  if (!primaryColor || !destructiveColor) {
+    return NextResponse.json(
+      { error: "Invalid primary or destructive color" },
+      { status: 400 }
+    );
+  }
 
   const light = getShadcnTheme(
     baseColor,
     accentColor,
-    primary,
-    destructive,
+    primaryColor,
+    destructiveColor,
     false,
     false
   );
@@ -54,8 +63,8 @@ export const GET = async (
   const dark = getShadcnTheme(
     baseColor,
     accentColor,
-    primary,
-    destructive,
+    primaryColor,
+    destructiveColor,
     true,
     false
   );
