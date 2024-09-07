@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useRef, type CSSProperties, type FC } from "react";
+import { useMemo, type CSSProperties, type FC } from "react";
 import { useQueryState } from "nuqs";
 import {
   Select,
@@ -23,7 +23,7 @@ import {
   type ColorShade,
 } from "@/lib/colors";
 import { Icons } from "@/components/icons";
-import { CircleHelp, CirclePlus, Copy, Moon, Sun, Check } from "lucide-react";
+import { CirclePlus, Copy, Moon, Sun, Check } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { ToggleGroupItem } from "@radix-ui/react-toggle-group";
@@ -107,14 +107,28 @@ export default function Home() {
           <Icons.radix className="h-6 text-foreground" />
 
           <div className="grow" />
-          <Button variant="ghost" size="icon">
-            <CircleHelp className="size-4" />
+
+          <Button variant="ghost" size="icon" asChild>
+            <a href="https://github.com/ewgenius/ui" target="_blank">
+              <Icons.github className="size-4" />
+            </a>
           </Button>
         </div>
 
         <div className="text-sm">
-          Generate custom CSS themes for Shadcn-UI effortlessly using vibrant
-          palettes from Radix Colors.
+          Generate custom CSS themes for{" "}
+          <a href="https://ui.shadcn.com" className="underline" target="_blank">
+            shadcn/ui
+          </a>{" "}
+          components effortlessly using vibrant palettes from{" "}
+          <a
+            href="https://www.radix-ui.com/colors"
+            className="underline"
+            target="_blank"
+          >
+            Radix Colors
+          </a>
+          .
         </div>
 
         <hr className="border-t" />
