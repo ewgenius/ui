@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/dialog";
 import { Charts } from "@/components/preview/charts";
 import { Dashboard } from "@/components/preview/dashboard";
+import { useCopy } from "@/hooks/useCopy";
 
 export default function Home() {
   const { setTheme } = useTheme();
@@ -386,37 +387,3 @@ ${Object.entries(darkTheme)
     </div>
   );
 };
-
-export function useTimeout() {
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const clear = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  };
-
-  const set = (callback: (args: void) => void, ms?: number) => {
-    clear();
-    timeoutRef.current = setTimeout(callback, ms);
-  };
-
-  return {
-    set,
-    clear,
-  };
-}
-
-export function useCopy() {
-  const [copied, setCopied] = useState(false);
-  const { set } = useTimeout();
-
-  const copy = (value: string) => {
-    if (navigator && navigator.clipboard) {
-      navigator.clipboard.writeText(value);
-      setCopied(true);
-      set(() => setCopied(false), 2500);
-    }
-  };
-
-  return { copy, copied };
-}
