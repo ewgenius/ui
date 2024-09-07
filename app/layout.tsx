@@ -19,7 +19,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable} overflow-hidden`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body>
         <ThemeProvider attribute="class" disableTransitionOnChange>
