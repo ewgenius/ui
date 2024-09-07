@@ -58,6 +58,18 @@ const config: Config = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          1: "hsl(var(--accent-1))",
+          2: "hsl(var(--accent-2))",
+          3: "hsl(var(--accent-3))",
+          4: "hsl(var(--accent-4))",
+          5: "hsl(var(--accent-5))",
+          6: "hsl(var(--accent-6))",
+          7: "hsl(var(--accent-7))",
+          8: "hsl(var(--accent-8))",
+          9: "hsl(var(--accent-9))",
+          10: "hsl(var(--accent-10))",
+          11: "hsl(var(--accent-11))",
+          12: "hsl(var(--accent-12))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
