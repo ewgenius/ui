@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -24,6 +25,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
