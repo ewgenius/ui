@@ -249,6 +249,12 @@ export function getShadcnTheme(
     [cssVariableName("input", true)]: getHSLValue(basePalette[`${base.key}6`]),
     [cssVariableName("ring", true)]: getHSLValue(basePalette[`${base.key}6`]),
 
+    [cssVariableName("chart-1", true)]: getHSLValue(accentPalette[`${accent.key}10`]),
+    [cssVariableName("chart-2", true)]: getHSLValue(accentPalette[`${accent.key}11`]),
+    [cssVariableName("chart-3", true)]: getHSLValue(accentPalette[`${accent.key}9`]),
+    [cssVariableName("chart-4", true)]: getHSLValue(accentPalette[`${accent.key}8`]),
+    [cssVariableName("chart-5", true)]: getHSLValue(accentPalette[`${accent.key}6`]),
+
     "--radius": "0.5rem",
   };
 
